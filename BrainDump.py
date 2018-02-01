@@ -1,59 +1,72 @@
-# createFile()
-# lineAppend()
-# newEntry()
-# clearField()
-# interPend()
-# goodOnes()
+## put Your thoughts into a file, clearing your mind
+
+# \tab == 3 spaces
+
+import os
+import time
+from sys import exit
 
 # ======================================================================
-def createFile(date.time()):
-# opening session generates file
-   # file of a session is named according to the date & time created
-
-def firstLine("time.begin - time.end | session.duration:"):
-# first line of a file contains date of beginning
-   # and at the end is modified: maybe put there some unique str, and replace it?
-   lineAppend(date() +" "+ time() +"endTime-placeholder")
-   #TODO: +endDate if session across the midnight
-   #BONUS: as well as summation of how long the session has taken, and nr of entries
-
 def newEntry():
-# displays an empty field for new text input
-   #TODO: put this in infinite loop
-   eraseField()
-   # display instructions/shortcuts at the top of field
-   print("Newline: Shift-Enter   Commit: Enter   Escape: write 'End'")
-   print()
-   print()
-   print()
-   print("What's on Your mind, now?")
-   # write in the middle of field (or x lines below instructions)
-   line = input(" >>  ")
-   lineAppend(line)
+   '''displays an empty field for new text input'''
+   #TODO: detect if IDLE is used
+   os.system('cls' if os.name=='nt' else 'clear')
+   
+   #print("Newline: Ctrl-Enter   Commit: Enter   Escape: write 'End'")
+   print("\t\t\t\t*What's on Your mind, now?*")
+   print('\n' * 8)
+   line = input(" >>  ")   # write in the middle of field (x lines below instructions)
+   
+   # if line == "end" or "exit":
+   if line == "end":
+      global goOn
+      goOn = False
+      return
+   return line
 
-def lineAppend():
-# writes each entry to a LINE of a file
-   # BONUS: newlines are replaced w/ "|"s  &&  S-Enter == newline
-
-# ======================================================================
-def interPend():
-#BONUS: new entry w/o submitting current one
-   # it is shown again afterwards
-   # simple shortcut to do it QUICKLY
-   # empty line is left where this'd be, and entry is prepended with nr of that line
-
-def goodOnes():
-#BONUS: after closing session: option to view contents line-by-line, and mark them as 'good ideas'
-   # WORKING: open copied file in N++ > rm lines you don't like using C-S-l
-   # reacts to (displayed) keys
-   # creates new file out of chosen entries - old name appended w/ "chosen" etc.
-
-#BONUS: font size regulation
+def lineAppend(string=None):
+   '''writes each entry to a LINE of a file and closes it'''
+   myFile = open(path + sessName, 'a+t')
+   
+   if string == None:
+      string=''
+   myFile.write(string + '\n')
+   
+   myFile.close()
 
 # =============================== CODE: ================================
-createFile()
-firstLine()
-while True:
-   newEntry()
-   if lastLine == "End":
-      return
+'''
+file of a session is named with the date & time of creation
+'''
+initTimeTuple = time.localtime()
+initTimeString = time.strftime('%Y.%m.%d %H;%M,%S', initTimeTuple)
+#if initTimeTuple[tm_hour] <= 5: 
+   #TODO: act like it's six hours earlier, where dirname is concerned
+   ## subtract 6h of TIME, and form an alternate tuple.. or use the-
+   ## yeah, seems like working on tuples here is less convenient
+   #TODO: get seconds & localtime to mingle nicely together
+path = '.\\CM sessions\\' + initTimeString[:10] + '\\'
+
+if not os.path.isdir(path):
+   os.makedirs(path)
+   
+sessName = 'ClearMind ' + initTimeString + '.txt'
+
+myFile = open(path + sessName, 'a+t')
+myFile.write(initTimeString + '\n\n')
+myFile.close()
+
+goOn = True
+while goOn:
+   lineAppend(newEntry())
+
+endTimeTuple = time.localtime()
+
+myFile = open(path + sessName, 'a+t')
+myFile.write(time.strftime('%Y.%m.%d %H;%M,%S', endTimeTuple))
+myFile.close()
+
+exit()
+
+# ======================================================================
+#TODO: font size regulation
