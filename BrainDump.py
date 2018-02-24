@@ -5,11 +5,12 @@
 import os
 import time
 from sys import exit
+from re import sub
 
 # ======================================================================
 def newEntry():
    '''displays an empty field for new text input'''
-   #TODO: detect if IDLE is used
+   #TODO: detect if IDLE is used?
    os.system('cls' if os.name=='nt' else 'clear')
    
    #print("Newline: Ctrl-Enter   Commit: Enter   Escape: write 'End'")
@@ -21,15 +22,20 @@ def newEntry():
    if line == "end":
       global goOn
       goOn = False
-      return
+      return #None
    return line
 
 def lineAppend(string=None):
    '''writes each entry to a LINE of a file and closes it'''
    myFile = open(path + sessName, 'a+t')
    
-   if string == None:
+   if string == None: #or goOn == False:
       string=''
+   string = sub('\t', ' ' * 3, string)
+   if not string.startswith(' ') and string:
+      #TODO: better noted that "non empty"
+      string = '* ' + string
+      
    myFile.write(string + '\n')
    
    myFile.close()
@@ -65,8 +71,19 @@ endTimeTuple = time.localtime()
 myFile = open(path + sessName, 'a+t')
 myFile.write(time.strftime('%Y.%m.%d %H;%M,%S', endTimeTuple))
 myFile.close()
+#TODO: open the just closed file in a Notepad++, for example
 
 exit()
 
 # ======================================================================
-#TODO: font size regulation
+#TODO: font size regulation & other formatting is VERY IMPORTATNT 
+#  it lets you open the script wherever AND have your custom looks
+#TODO: if not startswith(' ') (or startswith(*)?): print that line
+#  if Enter: append its copy to "sublimed" file of the same name w/ suffix
+#  elif w/e: show next such line
+#  it's for quickly extracting useful thoughts from amongst the less important ones
+#TODO: 
+#TODO: 
+#TODO: 
+#TODO: 
+#TODO: 
