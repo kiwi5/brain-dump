@@ -9,81 +9,83 @@ from re import sub
 
 # ======================================================================
 def newEntry():
-   '''displays an empty field for new text input'''
-   #TODO: detect if IDLE is used?
-   os.system('cls' if os.name=='nt' else 'clear')
+   """displays an empty field for new text input"""
+   os.system("cls" if os.name=="nt" else "clear") #TODO: detect if IDLE is used?
    
-   #print("Newline: Ctrl-Enter   Commit: Enter   Escape: write 'End'")
    print("\t\t\t\t*What's on Your mind, now?*")
-   print('\n' * 8)
-   line = input(" >>  ")   # write in the middle of field (x lines below instructions)
+   print("\n" * 8)
+   line = input(" >>  ")
    
-   # if line == "end" or "exit":
    if line == "end":
       global goOn
       goOn = False
-      return #None
-   return line
-
-def lineAppend(string=None):
-   '''writes each entry to a LINE of a file and closes it'''
-   myFile = open(path + sessName, 'a+t')
-   
-   if string == None: #or goOn == False:
-      string=''
-   string = sub('\t', ' ' * 3, string)
-   if not string.startswith(' ') and string:
-      #TODO: better noted that "non empty"
-      string = '* ' + string
+      return lineAppend("\n")
       
-   myFile.write(string + '\n')
+   line = stringFormatting(line)
+   return line + "\n"
+
+def stringFormatting(string=None):
+   """formats the string for better indentation and listing"""
+   if string == None:
+      string=""
+   string = sub("\t", " " * 3, string)
+   if string and not string.startswith(" "): #BONUS: better noted "non empty"?
+      string = "\n* " + string
+      
    
+   return string
+   
+def lineAppend(string=None):
+   """
+   writes input to a file and closes it
+   
+   DOESN"T insert a newline after the entry!
+   """
+   if string == None:
+      string=""
+   myFile = open(path + sessName, "a+t")
+   myFile.write(string)
    myFile.close()
 
 # =============================== CODE: ================================
-'''
+"""
 file of a session is named with the date & time of creation
-'''
-initTimeTuple = time.localtime()
-initTimeString = time.strftime('%Y.%m.%d %H;%M,%S', initTimeTuple)
-#if initTimeTuple[tm_hour] <= 5: 
-   #TODO: act like it's six hours earlier, where dirname is concerned
+"""
+initTimeString = time.strftime("%Y.%m.%d %H;%M,%S", time.localtime())
+#TODO: act like it's six hours earlier, where dirname is concerned
+   #if (time.localtime()==>)initTimeTuple[tm_hour] <= 5: 
    ## subtract 6h of TIME, and form an alternate tuple.. or use the-
    ## yeah, seems like working on tuples here is less convenient
-   #TODO: get seconds & localtime to mingle nicely together
-path = '.\\CM sessions\\' + initTimeString[:10] + '\\'
-
+   #TODO: get seconds & localtime to mingle nicely together #??
+sessName = "ClearMind " + initTimeString + ".txt"
+   
+path = ".\\CM sessions\\" + initTimeString[:10] + "\\"   # date named dir path
 if not os.path.isdir(path):
    os.makedirs(path)
-   
-sessName = 'ClearMind ' + initTimeString + '.txt'
+# -- init ends here --
 
-myFile = open(path + sessName, 'a+t')
-myFile.write(initTimeString + '\n\n')
-myFile.close()
+lineAppend(initTimeString + "\n")
 
 goOn = True
 while goOn:
    lineAppend(newEntry())
 
-endTimeTuple = time.localtime()
-
-myFile = open(path + sessName, 'a+t')
-myFile.write(time.strftime('%Y.%m.%d %H;%M,%S', endTimeTuple))
-myFile.close()
-#TODO: open the just closed file in a Notepad++, for example
+lineAppend(time.strftime("%Y.%m.%d %H;%M,%S", time.localtime()))
 
 exit()
 
 # ======================================================================
 #TODO: font size regulation & other formatting is VERY IMPORTATNT 
 #  it lets you open the script wherever AND have your custom looks
-#TODO: if not startswith(' ') (or startswith(*)?): print that line
+#TODO: if not startswith(" ") (or startswith(*)?): print that line
 #  if Enter: append its copy to "sublimed" file of the same name w/ suffix
 #  elif w/e: show next such line
 #  it's for quickly extracting useful thoughts from amongst the less important ones
-#TODO: 
-#TODO: 
-#TODO: 
-#TODO: 
+#TODO: showme - opens the file in npp, or default system editor if None
+#TODO: help - shows commands, howto use it, purpose, etc.
+   #print("Newline: Ctrl-Enter   Commit: Enter   Escape: write 'End'")
+#TODO: config file for custom command triggers and chosing the text editor
+#TODO: shortcut for deleting whole current enrty w/o commiting
+#TODO: taking args & modifying other list files in this manner
+#  although maybe variation with '-' and no empty lines between + no end-time
 #TODO: 
