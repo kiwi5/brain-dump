@@ -19,7 +19,7 @@ def newEntry():
    if line == "end":
       global goOn
       goOn = False
-      return lineAppend("\n")
+      return "\n"
       
    line = stringFormatting(line)
    return line + "\n"
@@ -32,14 +32,11 @@ def stringFormatting(string=None):
    if string and not string.startswith(" "): #BONUS: better noted "non empty"?
       string = "\n* " + string
       
-   
    return string
    
 def lineAppend(string=None):
    """
-   writes input to a file and closes it
-   
-   DOESN"T insert a newline after the entry!
+   writes input to a file and closes it, DOESN"T insert a newline after the entry!
    """
    if string == None:
       string=""
