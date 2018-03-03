@@ -1,4 +1,4 @@
-## put Your thoughts into a file, clearing your mind
+## put Your thoughts into a file, clearing up your mind
 
 # \tab == 3 spaces
 
@@ -7,20 +7,36 @@ import time
 from sys import exit
 from re import sub
 
-# ======================================================================
-def newEntry():
+# ============================ FUNCTIONS: ==============================
+def clearEntry(str = None):
    """displays an empty field for new text input"""
    os.system("cls" if os.name=="nt" else "clear") #TODO: detect if IDLE is used?
-   
    print("\t\t\t\t*What's on Your mind, now?*")
    print("\n" * 8)
-   line = input(" >>  ")
+   if str == None: str = " >>  "
+   return input(str)
    
-   if line == "end":
-      global goOn
-      goOn = False
-      return "\n"
-      
+def newEntry():
+   while True:
+      line = clearEntry()
+      if line == "end":
+         global goOn
+         goOn = False
+         return "\n"
+      elif line == "showme":
+         if os.name=="nt":
+            os.system("notepad.exe "+path+sessName)
+         continue
+      elif line == "showdir":
+         if os.name=="nt":
+            os.system("explorer.exe "+path)
+         continue
+      elif line == "help":
+         clearEntry(" to commit, press [Enter]\n to exit the script, commit 'end'\n\n other possible commits are:\n  'showme'     opens current file in notepad\n  'showdir'    opens the folder containing the current session\n\n press [Enter] to continue now")
+         #TODO: howto use it, purpose, etc.
+         continue
+      break
+   
    line = stringFormatting(line)
    return line + "\n"
 
@@ -45,9 +61,7 @@ def lineAppend(string=None):
    myFile.close()
 
 # =============================== CODE: ================================
-"""
-file of a session is named with the date & time of creation
-"""
+"""file of a session is named with the date & time of creation"""
 initTimeString = time.strftime("%Y.%m.%d %H;%M,%S", time.localtime())
 #TODO: act like it's six hours earlier, where dirname is concerned
    #if (time.localtime()==>)initTimeTuple[tm_hour] <= 5: 
@@ -78,10 +92,9 @@ exit()
 #  if Enter: append its copy to "sublimed" file of the same name w/ suffix
 #  elif w/e: show next such line
 #  it's for quickly extracting useful thoughts from amongst the less important ones
-#TODO: showme - opens the file in npp, or default system editor if None
-#TODO: help - shows commands, howto use it, purpose, etc.
-   #print("Newline: Ctrl-Enter   Commit: Enter   Escape: write 'End'")
-#TODO: config file for custom command triggers and chosing the text editor
+#DONE: showme - opens the file in npp, or default system editor if None
+#DONE: help - shows commands
+#TODO: config file for custom command triggers, chosing the text editor, etc.
 #TODO: shortcut for deleting whole current enrty w/o commiting
 #TODO: taking args & modifying other list files in this manner
 #  although maybe variation with '-' and no empty lines between + no end-time
