@@ -26,6 +26,7 @@ def newEntry():
       elif line == "showme":
          if os.name=="nt":
             os.system("notepad.exe "+path+sessName)
+            #BUG: it's waiting till it closes, to proceed
          continue
       elif line == "showdir":
          if os.name=="nt":
@@ -68,13 +69,16 @@ initTimeString = time.strftime("%Y.%m.%d %H;%M,%S", time.localtime())
    ## subtract 6h of TIME, and form an alternate tuple.. or use the-
    ## yeah, seems like working on tuples here is less convenient
    #TODO: get seconds & localtime to mingle nicely together #??
-sessName = "ClearMind " + initTimeString + ".txt"
+sessName = "ClearMind " + initTimeString[:10] + ".txt"   # date named session file
    
-path = ".\\CM sessions\\" + initTimeString[:10] + "\\"   # date named dir path
+path = ".\\CM sessions\\" + initTimeString[:7] + "\\" # "YYYY.MM" named dir path
 if not os.path.isdir(path):
    os.makedirs(path)
 # -- init ends here --
 
+# if fileExists(path + sessName):
+   # lineAppend("\n\n==\n")
+  
 lineAppend(initTimeString + "\n")
 
 goOn = True
@@ -86,12 +90,26 @@ lineAppend(time.strftime("%Y.%m.%d %H;%M,%S", time.localtime()))
 exit()
 
 # ======================================================================
+# if == "sublime":
+   # myfile.sublimation()
+   
+# def sublimation():
+   # """It's for quickly extracting useful thoughts from amongst the less important ones."""
+   # while True:
+      # #TODO: open a file --> and put next line into a variable
+      # line = myFile.nextLine()   # jakiś licznik linijek tutaj?
+      # if line.startswith("*"): a = input(line + "\n Press [Enter] to add it, otherwise press [Space],[Enter].")
+      # if a == "":
+         # line = line + linesThatFollow_withNoStar
+         # #TODO: open file with simil name --> append to it
+         # subFile.lineAppend(line)   # copy to "sublimed" file of the same name w/ suffix
+      # else: continue
+      # if EoF: 
+         # print("some nice communicate")
+         # break
+         
 #TODO: font size regulation & other formatting is VERY IMPORTATNT 
 #  it lets you open the script wherever AND have your custom looks
-#TODO: if not startswith(" ") (or startswith(*)?): print that line
-#  if Enter: append its copy to "sublimed" file of the same name w/ suffix
-#  elif w/e: show next such line
-#  it's for quickly extracting useful thoughts from amongst the less important ones
 #DONE: showme - opens the file in npp, or default system editor if None
 #DONE: help - shows commands
 #TODO: config file for custom command triggers, chosing the text editor, etc.
