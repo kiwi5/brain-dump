@@ -30,7 +30,7 @@ def newEntry():
          return   # "\n"
       elif line == "showme":
          if os.name == "nt":
-            os.system(f"notepad.exe {dirPath}{sessName}")
+            os.system(f"notepad.exe {fullPath}")
          continue
       elif line == "showdir":
          if os.name == "nt":
@@ -74,15 +74,14 @@ def lineAppend(string=None):
 
 # =============================== CODE: ================================
 """File of a session is named with the date & time of creation."""
-initTimeString = time.strftime("%Y.%m.%d %H:%M'%S", time.localtime())
-sessName = f"ClearMind {initTimeString[:10]}.txt"  # date-named session file
-dirPath = f"./CM sessions/{initTimeString[:7]}/"   # "YYYY.MM"-named dir path
-if os.name is "nt":
-   dirPath = sub("/", r"\\", dirPath)
-if not os.path.isdir(dirPath):
-   os.makedirs(dirPath)
+sessionDir = "CM sessions"
+dateTimeFORMAT = "%Y.%m.%d %H:%M'%S"
+initTimeString = time.strftime(dateTimeFORMAT, time.localtime())
+sessionName = f"ClearMind {initTimeString[:10]}.txt"  # date-named session file
+dirPath = os.path.join(os.curdir, sessionDir, initTimeString[:7])    # "YYYY.MM"-named dir path
+os.makedirs(dirPath, exist_ok=True)
 
-fullPath = dirPath + sessName
+fullPath = os.path.join(dirPath, sessionName)
 if os.path.exists(fullPath):
    lineAppend("\n\n==\n")
 # -- init ends here --
@@ -94,6 +93,6 @@ while goOn:
    lineAppend(newEntry())
 
 lineAppend("\n")
-lineAppend(time.strftime("%Y.%m.%d %H;%M,%S", time.localtime()))
+lineAppend(time.strftime(dateTimeFORMAT, time.localtime()))
 
 exit()
